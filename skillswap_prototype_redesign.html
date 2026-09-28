@@ -1,0 +1,672 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>SkillSwap — PUCPR</title>
+  <style>
+    :root {
+      --ink: #12131b;
+      --muted: #6d7b93;
+      --line: #e7ebf2;
+      --panel: #ffffff;
+      --soft: #f7f8fb;
+      --green: #00945f;
+      --green-soft: #e7f7ef;
+      --purple: #6460f5;
+      --purple-soft: #eef0ff;
+      --orange: #ff9800;
+      --orange-soft: #fff4e6;
+      --danger: #ff5a72;
+      --shadow: 0 16px 46px rgba(25, 30, 52, 0.12);
+      --radius: 28px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; background: #f3f4f7; color: var(--ink); font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    button, input { font: inherit; }
+    button { -webkit-tap-highlight-color: transparent; }
+
+    body {
+      display: grid;
+      place-items: start center;
+      padding: 22px 12px;
+    }
+
+    .phone {
+      position: relative;
+      width: min(100%, 430px);
+      min-height: 860px;
+      overflow: hidden;
+      background: var(--panel);
+      border-radius: 32px;
+      border: 1px solid #e1e6ef;
+      box-shadow: var(--shadow);
+    }
+
+    .statusbar {
+      height: 42px;
+      padding: 12px 22px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .status-icons { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+    .signal { letter-spacing: -2px; font-size: 13px; transform: translateY(-1px); }
+    .battery { width: 24px; height: 11px; border: 1.5px solid #7f8796; border-radius: 3px; position: relative; }
+    .battery::before { content: ""; position: absolute; right: -4px; top: 2.5px; width: 2px; height: 5px; background: #7f8796; border-radius: 0 2px 2px 0; }
+    .battery::after { content: ""; position: absolute; left: 2px; top: 2px; width: 16px; height: 5px; border-radius: 1px; background: #12131b; }
+
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 24px 14px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 27px;
+      font-weight: 900;
+      letter-spacing: -1.2px;
+    }
+
+    .brand-mark { width: 9px; height: 30px; border-radius: 9px; background: var(--green); }
+    .brand b { color: var(--purple); }
+
+    .campus-pill {
+      border: 0;
+      background: var(--soft);
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 800;
+      padding: 10px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+
+    .content { padding: 0 24px 26px; }
+
+    .intro-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin: 4px 0 14px; }
+    .eyebrow { color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-weight: 800; font-size: 11px; margin-bottom: 5px; }
+    .intro-row h1 { margin: 0; font-size: 28px; line-height: 1.03; letter-spacing: -.9px; }
+    .counter { white-space: nowrap; color: var(--purple); background: var(--purple-soft); padding: 8px 10px; border-radius: 14px; font-weight: 800; font-size: 12px; }
+
+    .profile-stage { position: relative; }
+    .profile-card {
+      position: relative;
+      height: 590px;
+      border-radius: 28px;
+      overflow: hidden;
+      background: linear-gradient(160deg, #cfd8ff, #d8f4e5);
+      border: 1px solid #e2e7ef;
+      box-shadow: 0 12px 34px rgba(18, 19, 27, 0.12);
+      isolation: isolate;
+      transition: transform .34s ease, opacity .34s ease;
+    }
+
+    .profile-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(5, 9, 18, .90) 0%, rgba(5, 9, 18, .52) 26%, rgba(5, 9, 18, .08) 56%, rgba(5, 9, 18, 0) 72%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .photo-fallback { position: absolute; inset: 0; display: grid; place-items: center; font-size: 116px; font-weight: 900; color: rgba(255,255,255,.66); }
+    .profile-photo { width: 100%; height: 100%; object-fit: cover; display: block; position: relative; z-index: 1; }
+
+    .photo-top {
+      position: absolute;
+      inset: 18px 18px auto;
+      z-index: 3;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .match-badge { background: rgba(255,255,255,.92); color: var(--orange); border-radius: 999px; padding: 9px 11px; font-size: 12px; font-weight: 900; backdrop-filter: blur(8px); }
+    .more-button { width: 42px; height: 42px; border-radius: 50%; border: 0; background: rgba(255,255,255,.92); font-weight: 900; cursor: pointer; }
+
+    .profile-overlay { position: absolute; left: 24px; right: 24px; bottom: 24px; z-index: 3; color: white; }
+    .profile-overlay h2 { margin: 0 0 5px; font-size: 31px; letter-spacing: -.9px; }
+    .profile-overlay .major { color: rgba(255,255,255,.88); font-size: 15px; margin-bottom: 18px; }
+    .label { color: #ffa800; font-weight: 900; text-transform: uppercase; letter-spacing: .07em; font-size: 11px; margin: 12px 0 6px; }
+    .label.learn-label { color: #8e8bff; }
+    .chips { display: flex; flex-wrap: wrap; gap: 7px; }
+    .chip { display: inline-flex; align-items: center; gap: 6px; padding: 8px 11px; border-radius: 999px; font-size: 12px; font-weight: 800; }
+    .chip.teach { color: var(--green); background: rgba(237, 255, 246, .95); }
+    .chip.learn { color: var(--purple); background: rgba(245, 244, 255, .96); }
+    .chip::before { content: "▣"; font-size: 10px; }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1.35fr 1fr;
+      gap: 12px;
+      margin: 16px 0 10px;
+    }
+
+    .action {
+      min-height: 58px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: white;
+      cursor: pointer;
+      font-size: 22px;
+      font-weight: 900;
+      transition: transform .16s ease, box-shadow .16s ease;
+    }
+    .action:active { transform: scale(.97); }
+    .action.reject { color: var(--danger); }
+    .action.details { font-size: 13px; color: var(--ink); background: var(--soft); }
+    .action.like { color: var(--purple); background: var(--purple-soft); border-color: #d9dbff; }
+
+    .mini-skills { border-top: 1px solid var(--line); padding-top: 14px; display: grid; gap: 11px; }
+    .mini-line { display: grid; grid-template-columns: 96px 1fr; gap: 8px; align-items: start; }
+    .mini-line strong { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding-top: 7px; }
+    .tiny-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tiny-chip { background: var(--soft); border: 1px solid #edf0f5; padding: 6px 8px; border-radius: 999px; color: #59667d; font-size: 10px; font-weight: 700; }
+
+    .screen {
+      position: absolute;
+      inset: 0;
+      z-index: 30;
+      background: white;
+      display: none;
+      overflow-y: auto;
+    }
+    .screen.open { display: block; }
+    .screen-inner { min-height: 100%; padding: 0 24px 26px; }
+    .screen-head { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; padding: 5px 0 18px; }
+    .screen-head h2 { text-align: center; margin: 0; font-size: 17px; }
+    .icon-btn { width: 42px; height: 42px; border: 0; border-radius: 50%; background: var(--soft); cursor: pointer; font-size: 20px; }
+    .screen-title { margin: 0 0 8px; font-size: 30px; letter-spacing: -.8px; }
+    .screen-sub { margin: 0 0 20px; color: var(--muted); line-height: 1.45; }
+
+    .detail-hero { margin: 0 -24px; height: 330px; position: relative; background: linear-gradient(160deg, #d7ddff, #dff6ea); overflow: hidden; }
+    .detail-hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .detail-hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.32), transparent 42%); }
+    .detail-body { padding-top: 22px; }
+    .detail-name-row { display: flex; justify-content: space-between; gap: 14px; align-items: center; }
+    .detail-name-row h1 { margin: 0; font-size: 29px; letter-spacing: -.7px; }
+    .rating { color: var(--orange); background: var(--orange-soft); border-radius: 999px; padding: 9px 11px; font-size: 12px; font-weight: 900; }
+    .degree { color: var(--green); font-weight: 800; margin-top: 4px; }
+    .about-title, .section-title { margin: 24px 0 8px; font-size: 17px; }
+    .about-text { color: #2e3340; font-size: 15px; line-height: 1.55; }
+    .detail-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+
+    .match-hero {
+      border: 1.5px solid #7d79ff;
+      border-radius: 25px;
+      background: #f1f3ff;
+      padding: 20px;
+      margin-top: 14px;
+    }
+    .match-top { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+    .confirmed { background: var(--green-soft); color: var(--green); font-size: 10px; font-weight: 900; border-radius: 999px; padding: 7px 9px; }
+    .soon { color: var(--purple); font-size: 12px; font-weight: 900; }
+    .match-hero h3 { margin: 0 0 4px; font-size: 25px; }
+    .match-meta { color: var(--muted); font-weight: 700; }
+    .divider { height: 1px; background: #dde0f1; margin: 18px 0; }
+    .exchange-row { display: grid; grid-template-columns: 1fr auto 1fr; gap: 9px; align-items: center; }
+    .exchange-side { border-radius: 17px; padding: 14px; min-width: 0; }
+    .exchange-side.teach { background: var(--green-soft); color: var(--green); }
+    .exchange-side.learn { background: #ececff; color: var(--purple); }
+    .exchange-side small { display: block; color: var(--muted); font-weight: 800; margin-bottom: 5px; }
+    .exchange-side strong { display: block; line-height: 1.2; }
+    .swap-arrow { color: var(--muted); font-weight: 900; }
+
+    .duration-title { margin: 24px 0 10px; font-size: 14px; font-weight: 900; }
+    .duration-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; }
+    .duration-btn { border: 1px solid var(--line); background: white; padding: 12px 8px; border-radius: 14px; font-size: 12px; font-weight: 800; cursor: pointer; color: var(--muted); }
+    .duration-btn.selected { color: var(--purple); border-color: #8580ff; background: var(--purple-soft); }
+
+    .primary-btn, .secondary-btn {
+      width: 100%; min-height: 52px; border-radius: 16px; font-weight: 900; cursor: pointer;
+    }
+    .primary-btn { margin-top: 20px; border: 0; background: var(--purple); color: white; }
+    .secondary-btn { margin-top: 10px; border: 1px solid var(--line); background: white; color: var(--ink); }
+
+    .calendar-titlebar { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 8px 0 18px; }
+    .calendar-titlebar h1 { margin: 0; font-size: 28px; }
+    .segmented { display: flex; gap: 4px; background: var(--soft); padding: 4px; border-radius: 999px; }
+    .segmented span { padding: 8px 10px; border-radius: 999px; font-size: 11px; font-weight: 800; color: var(--muted); }
+    .segmented .active { background: white; color: var(--purple); box-shadow: 0 2px 8px rgba(30,35,60,.08); }
+
+    .day-strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; margin: 0 0 18px; }
+    .day { text-align: center; border-radius: 14px; padding: 10px 3px; color: var(--muted); font-size: 11px; font-weight: 800; }
+    .day b { display: block; margin-top: 4px; color: var(--ink); font-size: 16px; }
+    .day.active { background: var(--purple-soft); color: var(--purple); }
+    .day.active b { color: var(--purple); }
+
+    .slot-group { margin-top: 18px; }
+    .slot-group-title { color: var(--muted); font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 9px; }
+    .slot-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .time-slot { min-height: 80px; padding: 12px; text-align: left; border-radius: 16px; border: 1px solid #dfe4ed; background: white; color: var(--ink); cursor: pointer; }
+    .time-slot strong { display: block; font-size: 14px; margin-bottom: 4px; }
+    .time-slot small { color: var(--muted); }
+    .time-slot.selected { border-color: var(--purple); background: var(--purple-soft); color: var(--purple); }
+    .time-slot.selected small { color: #7470d5; }
+
+    .selected-summary { margin: 18px 0 0; padding: 14px; border-radius: 16px; background: var(--soft); color: var(--muted); font-size: 13px; }
+    .selected-summary strong { color: var(--ink); }
+
+    .confirm-icon { width: 86px; height: 86px; border-radius: 28px; display: grid; place-items: center; margin: 54px auto 18px; background: var(--green-soft); font-size: 44px; }
+    .confirm-title { text-align: center; font-size: 31px; margin: 0; letter-spacing: -.8px; }
+    .confirm-sub { text-align: center; color: var(--muted); margin: 9px auto 26px; max-width: 300px; line-height: 1.45; }
+    .confirm-card { border: 1px solid var(--line); border-radius: 22px; padding: 18px; background: white; }
+    .confirm-person { font-size: 19px; font-weight: 900; margin-bottom: 12px; }
+    .confirm-line { display: grid; grid-template-columns: 22px 1fr; gap: 9px; margin: 10px 0; color: #343a48; line-height: 1.4; }
+
+    .list-tabs { display: flex; gap: 7px; margin: 8px 0 18px; overflow-x: auto; scrollbar-width: none; }
+    .list-tabs::-webkit-scrollbar { display: none; }
+    .list-tab { white-space: nowrap; border: 0; background: var(--soft); color: var(--muted); font-weight: 800; padding: 10px 14px; border-radius: 999px; }
+    .list-tab.active { background: var(--purple); color: white; }
+    .sessions-list { display: grid; gap: 10px; }
+    .session-card { border: 1px solid var(--line); border-radius: 19px; padding: 14px; background: white; }
+    .session-card-top { display: flex; justify-content: space-between; gap: 10px; align-items: start; }
+    .avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--soft); display: grid; place-items: center; font-weight: 900; color: var(--purple); flex: 0 0 auto; overflow: hidden; }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .session-main { flex: 1; min-width: 0; }
+    .session-name { font-weight: 900; margin-bottom: 4px; }
+    .session-exchange { font-size: 12px; color: var(--green); font-weight: 800; }
+    .session-time { font-size: 11px; color: var(--muted); white-space: nowrap; }
+    .session-meta { margin: 11px 0 0 54px; color: var(--muted); font-size: 12px; line-height: 1.45; }
+    .empty-state { border: 1px dashed #d9dee8; border-radius: 20px; padding: 28px; text-align: center; color: var(--muted); }
+
+    .toast { position: absolute; left: 50%; bottom: 18px; transform: translate(-50%, 14px); background: #151821; color: white; border-radius: 999px; padding: 11px 14px; font-size: 12px; font-weight: 800; opacity: 0; pointer-events: none; transition: .2s ease; z-index: 80; }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    .flying-beer {
+      position: absolute;
+      bottom: -76px;
+      z-index: 100;
+      pointer-events: none;
+      animation: beerFly 2.65s cubic-bezier(.12,.68,.21,1) forwards;
+      filter: drop-shadow(0 8px 8px rgba(0,0,0,.12));
+    }
+
+    @keyframes beerFly {
+      0% { transform: translate3d(0,0,0) rotate(0deg) scale(.45); opacity: 0; }
+      12% { opacity: 1; }
+      52% { transform: translate3d(var(--drift), -420px, 0) rotate(330deg) scale(1); opacity: 1; }
+      100% { transform: translate3d(calc(var(--drift) * 1.7), -930px, 0) rotate(760deg) scale(1.35); opacity: 0; }
+    }
+
+    .swipe-left { transform: translateX(-115%) rotate(-10deg); opacity: 0; }
+    .swipe-right { transform: translateX(115%) rotate(10deg); opacity: 0; }
+
+    @media (max-width: 470px) {
+      body { padding: 0; background: white; }
+      .phone { width: 100%; min-height: 100vh; border-radius: 0; border: 0; box-shadow: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="phone" id="app">
+    <div class="statusbar" aria-hidden="true">
+      <span>9:41</span>
+      <div class="status-icons"><span>⌁</span><span class="signal">▂▄▆█</span><span class="battery"></span></div>
+    </div>
+
+    <header class="app-header">
+      <div class="brand"><span class="brand-mark"></span><span>Skill<b>Swap</b></span></div>
+      <button class="campus-pill" id="sessionsShortcut" type="button">PUCPR Curitiba</button>
+    </header>
+
+    <section class="content" id="homeScreen">
+      <div class="intro-row">
+        <div>
+          <div class="eyebrow">Discover on campus</div>
+          <h1>Find your<br />skill match</h1>
+        </div>
+        <div class="counter"><span id="matchCount">0</span> matches</div>
+      </div>
+
+      <div class="profile-stage"><div id="card"></div></div>
+
+      <div class="actions" id="mainActions">
+        <button class="action reject" id="reject" type="button" aria-label="Pass profile">✕</button>
+        <button class="action details" id="details" type="button">View profile</button>
+        <button class="action like" id="like" type="button" aria-label="Like profile">♥</button>
+      </div>
+
+      <div class="mini-skills">
+        <div class="mini-line"><strong>You teach</strong><div class="tiny-chips" id="myTeachSkills"></div></div>
+        <div class="mini-line"><strong>You learn</strong><div class="tiny-chips" id="myLearnSkills"></div></div>
+      </div>
+    </section>
+
+    <section class="screen" id="detailsScreen" aria-label="Profile details">
+      <div class="statusbar" aria-hidden="true"><span>9:41</span><div class="status-icons"><span>⌁</span><span class="signal">▂▄▆█</span><span class="battery"></span></div></div>
+      <div class="screen-inner">
+        <div class="screen-head"><button class="icon-btn" id="closeDetails" type="button">←</button><h2>Profile</h2><span></span></div>
+        <div class="detail-hero" id="detailHero"></div>
+        <div class="detail-body" id="detailBody"></div>
+      </div>
+    </section>
+
+    <section class="screen" id="matchScreen" aria-label="Match details">
+      <div class="statusbar" aria-hidden="true"><span>9:41</span><div class="status-icons"><span>⌁</span><span class="signal">▂▄▆█</span><span class="battery"></span></div></div>
+      <div class="screen-inner">
+        <div class="screen-head"><button class="icon-btn" id="closeMatch" type="button">←</button><h2>Exchange Match</h2><span></span></div>
+        <h1 class="screen-title">It’s a Skill Match 🎉</h1>
+        <p class="screen-sub" id="matchIntro">You both have something useful to swap.</p>
+        <div class="match-hero">
+          <div class="match-top"><span class="confirmed">MATCHED</span><span class="soon">Free • campus exchange</span></div>
+          <h3 id="matchPersonTitle"></h3>
+          <div class="match-meta" id="matchMeta"></div>
+          <div class="divider"></div>
+          <div class="exchange-row">
+            <div class="exchange-side learn"><small>You learn</small><strong id="theyTeach"></strong></div>
+            <div class="swap-arrow">⇄</div>
+            <div class="exchange-side teach"><small>You teach</small><strong id="youTeach"></strong></div>
+          </div>
+        </div>
+        <div class="duration-title">How long should your SkillSwap be?</div>
+        <div class="duration-grid" id="durationGrid">
+          <button class="duration-btn selected" type="button" data-duration="30 min ↔ 30 min">30 ↔ 30</button>
+          <button class="duration-btn" type="button" data-duration="45 min ↔ 45 min">45 ↔ 45</button>
+          <button class="duration-btn" type="button" data-duration="60 min ↔ 60 min">60 ↔ 60</button>
+        </div>
+        <button class="primary-btn" id="openCalendar" type="button">See available times</button>
+        <button class="secondary-btn" id="keepSwiping" type="button">Keep swiping</button>
+      </div>
+    </section>
+
+    <section class="screen" id="calendarScreen" aria-label="Exchange calendar">
+      <div class="statusbar" aria-hidden="true"><span>9:41</span><div class="status-icons"><span>⌁</span><span class="signal">▂▄▆█</span><span class="battery"></span></div></div>
+      <div class="screen-inner">
+        <div class="screen-head"><button class="icon-btn" id="closeCalendar" type="button">←</button><h2>Calendar</h2><span></span></div>
+        <div class="calendar-titlebar"><h1>Exchange Calendar</h1><div class="segmented"><span class="active">My Availability</span><span>Partner</span></div></div>
+        <div class="day-strip"><div class="day"><span>Mon</span><b>09</b></div><div class="day active"><span>Tue</span><b>10</b></div><div class="day"><span>Wed</span><b>11</b></div><div class="day"><span>Thu</span><b>12</b></div><div class="day"><span>Fri</span><b>13</b></div></div>
+        <div id="calendarGrid"></div>
+        <div class="selected-summary" id="selectedTimeDisplay">No time selected yet 👀</div>
+        <button class="primary-btn" id="confirmTime" type="button">Confirm session</button>
+      </div>
+    </section>
+
+    <section class="screen" id="confirmationScreen" aria-label="Session confirmation">
+      <div class="statusbar" aria-hidden="true"><span>9:41</span><div class="status-icons"><span>⌁</span><span class="signal">▂▄▆█</span><span class="battery"></span></div></div>
+      <div class="screen-inner">
+        <div class="confirm-icon">🍻</div>
+        <h1 class="confirm-title">Session planned!</h1>
+        <p class="confirm-sub">Your exchange is locked in. Now all that’s left is showing up and pretending you prepared.</p>
+        <div class="confirm-card" id="confirmationDetails"></div>
+        <button class="primary-btn" id="finishSession" type="button">Keep swiping</button>
+        <button class="secondary-btn" id="openSessionsFromConfirmation" type="button">View my exchanges</button>
+      </div>
+    </section>
+
+    <section class="screen" id="sessionsScreen" aria-label="My exchanges">
+      <div class="statusbar" aria-hidden="true"><span>9:41</span><div class="status-icons"><span>⌁</span><span class="signal">▂▄▆█</span><span class="battery"></span></div></div>
+      <div class="screen-inner">
+        <div class="screen-head"><button class="icon-btn" id="closeSessions" type="button">←</button><h2>My Exchanges</h2><span></span></div>
+        <h1 class="screen-title">My Exchanges</h1>
+        <div class="list-tabs"><button class="list-tab active" type="button">All</button><button class="list-tab" type="button">Pending</button><button class="list-tab" type="button">Active</button><button class="list-tab" type="button">Completed</button></div>
+        <div class="sessions-list" id="sessionsList"></div>
+      </div>
+    </section>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </main>
+
+  <script>
+    const currentUser = {
+      name: "You",
+      canTeach: ["Python", "Excel", "English", "Bad Dancing", "Surviving Group Projects"],
+      wantsToLearn: ["Portuguese", "Graphic Design", "Guitar", "Cooking", "Dad Jokes"]
+    };
+
+    const profiles = [
+      {name:"Ana", age:22, university:"PUCPR", major:"Architecture", image:"https://i.pravatar.cc/900?img=47", bio:"I love photography, travelling and pretending I understand Brazilian bureaucracy.", canTeach:["Portuguese","Photography","Finding Cheap Flights"], wantsToLearn:["Python","Excel","English"], likesYou:true, availableSlots:["Monday • 18:00","Tuesday • 16:30","Wednesday • 19:00","Friday • 14:00"]},
+      {name:"Lucas", age:21, university:"PUCPR", major:"Design", image:"https://i.pravatar.cc/900?img=12", bio:"Design student. My entire personality is basically Figma and iced coffee.", canTeach:["Graphic Design","Figma","Photoshop"], wantsToLearn:["English","Python","Making Good Coffee"], likesYou:true, availableSlots:["Monday • 15:00","Tuesday • 19:30","Thursday • 17:00","Saturday • 13:00"]},
+      {name:"Maria", age:23, university:"UFPR", major:"Music", image:"https://i.pravatar.cc/900?img=32", bio:"Music student. I own a guitar and therefore legally have to bring it to every party.", canTeach:["Guitar","Music Theory","Karaoke Confidence"], wantsToLearn:["Excel","Photography","Bad Dancing"], likesYou:true, availableSlots:["Tuesday • 18:00","Wednesday • 16:00","Friday • 20:00"]},
+      {name:"John", age:22, university:"PUCPR", major:"Business", image:"https://i.pravatar.cc/900?img=53", bio:"Business student. Says 'networking opportunity' instead of 'party'.", canTeach:["Finance","Marketing","LinkedIn Survival"], wantsToLearn:["Python","English","Graphic Design"], likesYou:false, availableSlots:["Monday • 14:00","Thursday • 19:00"]},
+      {name:"Pedro", age:24, university:"PUCPR", major:"Law", image:"https://i.pravatar.cc/900?img=68", bio:"I have reached the age where making people groan at jokes brings me genuine happiness.", canTeach:["Dad Jokes","Portuguese","BBQ"], wantsToLearn:["Excel","English","Photography"], likesYou:true, availableSlots:["Monday • 20:00","Wednesday • 17:00","Thursday • 18:30","Saturday • 15:00"]},
+      {name:"Sofia", age:20, university:"UFPR", major:"Nutrition", image:"https://i.pravatar.cc/900?img=45", bio:"Can cook approximately seven meals. Five of them involve pasta.", canTeach:["Cooking","Pasta Without Burning It","Meal Prep"], wantsToLearn:["English","Excel","Guitar"], likesYou:true, availableSlots:["Tuesday • 18:00","Thursday • 16:00","Friday • 19:00","Sunday • 15:30"]},
+      {name:"Rafael", age:22, university:"PUCPR", major:"Engineering", image:"https://i.pravatar.cc/900?img=11", bio:"I can park a car in spaces that appear physically impossible.", canTeach:["Parallel Parking","Driving","Changing a Tire"], wantsToLearn:["English","Python","Cooking"], likesYou:false, availableSlots:["Wednesday • 18:00","Saturday • 10:00"]},
+      {name:"Julia", age:21, university:"PUCPR", major:"Communication", image:"https://i.pravatar.cc/900?img=25", bio:"Professional procrastinator. Somehow everything still gets submitted at 23:58.", canTeach:["Professional Procrastination","Canva","Presentation Design"], wantsToLearn:["Excel","Python","Time Management"], likesYou:true, availableSlots:["Monday • 17:30","Wednesday • 19:30","Thursday • 15:00"]},
+      {name:"Mateus", age:23, university:"UTFPR", major:"Computer Science", image:"https://i.pravatar.cc/900?img=13", bio:"Computer science student. Can fix your laptop but absolutely not your emotional problems.", canTeach:["JavaScript","Cybersecurity Basics","Fixing Wi-Fi"], wantsToLearn:["English","Graphic Design","Bad Dancing"], likesYou:true, availableSlots:["Tuesday • 20:00","Thursday • 19:00","Saturday • 17:00"]},
+      {name:"Camila", age:22, university:"PUCPR", major:"Biology", image:"https://i.pravatar.cc/900?img=49", bio:"My toxic trait is believing every houseplant can be saved.", canTeach:["Plant Care","Portuguese","Making Good Coffee"], wantsToLearn:["Python","Excel","Photography"], likesYou:true, availableSlots:["Monday • 16:00","Wednesday • 18:30","Friday • 16:00"]},
+      {name:"Bruno", age:24, university:"UFPR", major:"Media", image:"https://i.pravatar.cc/900?img=8", bio:"Can produce a meme about almost any situation within approximately 45 seconds.", canTeach:["Meme Creation","Video Editing","Social Media"], wantsToLearn:["English","Python","Cooking"], likesYou:false, availableSlots:["Tuesday • 15:00","Friday • 18:00"]},
+      {name:"Beatriz", age:21, university:"PUCPR", major:"Psychology", image:"https://i.pravatar.cc/900?img=44", bio:"I take karaoke way more seriously than any reasonable person should.", canTeach:["Singing","Karaoke Confidence","Portuguese"], wantsToLearn:["Excel","English","Bad Dancing"], likesYou:true, availableSlots:["Tuesday • 17:00","Thursday • 20:00","Sunday • 14:00"]},
+      {name:"Gabriel", age:21, university:"PUCPR", major:"Computer Science", image:"https://i.pravatar.cc/900?img=69", bio:"Hey! I'm in my 3rd year at PUCPR. Currently looking to level up my German and overcome my fear of public speaking. Happy to share some Python wisdom in return.", canTeach:["Python","Calculus I","Data Structures","Guitar Basics"], wantsToLearn:["Graphic Design","Python","Guitar"], likesYou:true, availableSlots:["Monday • 19:00","Wednesday • 15:30","Friday • 17:00"]},
+      {name:"Isabela", age:23, university:"PUCPR", major:"Journalism", image:"https://i.pravatar.cc/900?img=29", bio:"Can turn a five-minute story into a forty-minute story with absolutely no regrets.", canTeach:["Storytelling","Portuguese","Public Speaking"], wantsToLearn:["Excel","Python","Cooking"], likesYou:true, availableSlots:["Tuesday • 16:00","Thursday • 18:00","Saturday • 14:00"]}
+    ];
+
+    let currentProfile = 0;
+    let matchCount = 0;
+    let matchedPerson = null;
+    let selectedSession = "30 min ↔ 30 min";
+    let selectedTheyTeach = "";
+    let selectedYouTeach = "";
+    let selectedTime = "";
+    const bookedSessions = [];
+
+    const $ = (id) => document.getElementById(id);
+    const app = $("app");
+
+    function tinyChips(items) {
+      return items.map(skill => `<span class="tiny-chip">${skill}</span>`).join("");
+    }
+
+    function skillChips(items, type) {
+      return items.slice(0, 3).map(skill => `<span class="chip ${type}">${skill}</span>`).join("");
+    }
+
+    function photoMarkup(person, className = "profile-photo") {
+      const safe = person.name.replace(/"/g, "&quot;");
+      return `<div class="photo-fallback">${person.name.charAt(0)}</div><img class="${className}" src="${person.image}" alt="${safe}" onerror="this.remove()">`;
+    }
+
+    function showMySkills() {
+      $("myTeachSkills").innerHTML = tinyChips(currentUser.canTeach);
+      $("myLearnSkills").innerHTML = tinyChips(currentUser.wantsToLearn);
+    }
+
+    function findSkillExchange(person) {
+      return {
+        theyCanTeachYou: person.canTeach.filter(skill => currentUser.wantsToLearn.includes(skill)),
+        youCanTeachThem: currentUser.canTeach.filter(skill => person.wantsToLearn.includes(skill))
+      };
+    }
+
+    function calculateMatch(person) {
+      const exchange = findSkillExchange(person);
+      const incoming = exchange.theyCanTeachYou.length;
+      const outgoing = exchange.youCanTeachThem.length;
+      if (incoming > 0 && outgoing > 0) return Math.min(98, 82 + incoming * 5 + outgoing * 4);
+      if (incoming > 0 || outgoing > 0) return 63 + Math.max(incoming, outgoing) * 5;
+      return 31;
+    }
+
+    function showProfile() {
+      const card = $("card");
+      if (currentProfile >= profiles.length) {
+        card.innerHTML = `<div class="empty-state" style="margin-top:32px"><div style="font-size:42px">👀</div><h2 style="color:#12131b">You swiped everyone</h2><p>That is either impressive or slightly concerning.</p><button class="secondary-btn" type="button" id="restartProfiles">Start over</button></div>`;
+        $("mainActions").style.display = "none";
+        const restart = $("restartProfiles");
+        if (restart) restart.addEventListener("click", () => { currentProfile = 0; $("mainActions").style.display = "grid"; showProfile(); });
+        return;
+      }
+      $("mainActions").style.display = "grid";
+      const person = profiles[currentProfile];
+      const score = calculateMatch(person);
+      card.innerHTML = `<article class="profile-card" id="profileCard">
+        ${photoMarkup(person)}
+        <div class="photo-top"><span class="match-badge">☆ ${score}% match</span><button class="more-button" type="button" aria-label="More profile details">•••</button></div>
+        <div class="profile-overlay">
+          <h2>${person.name}, ${person.age}</h2>
+          <div class="major">${person.major} — ${person.university}</div>
+          <div class="label">I can teach</div><div class="chips">${skillChips(person.canTeach, "teach")}</div>
+          <div class="label learn-label">I want to learn</div><div class="chips">${skillChips(person.wantsToLearn, "learn")}</div>
+        </div>
+      </article>`;
+      card.querySelector(".more-button").addEventListener("click", openDetails);
+    }
+
+    function openDetails() {
+      const person = profiles[currentProfile];
+      if (!person) return;
+      $("detailHero").innerHTML = photoMarkup(person, "detail-photo");
+      $("detailBody").innerHTML = `<div class="detail-name-row"><div><h1>${person.name}, ${person.age}</h1><div class="degree">${person.major} — ${person.university}</div></div><div class="rating">☆ 4.${7 + (currentProfile % 3)}</div></div>
+        <h3 class="about-title">ABOUT ME</h3><div class="about-text">${person.bio}</div>
+        <h3 class="section-title">Skills I Teach</h3><div class="detail-chips">${person.canTeach.map(s => `<span class="chip teach">${s}</span>`).join("")}</div>
+        <h3 class="section-title">Skills I Want to Learn</h3><div class="detail-chips">${person.wantsToLearn.map(s => `<span class="chip learn">${s}</span>`).join("")}</div>
+        <button class="primary-btn" type="button" id="likeFromDetails">Like ${person.name}</button>`;
+      openScreen("detailsScreen");
+      $("likeFromDetails").addEventListener("click", () => { closeScreen("detailsScreen"); handleLike(); });
+    }
+
+    function prepareMatchScreen(person) {
+      const exchange = findSkillExchange(person);
+      selectedTheyTeach = exchange.theyCanTeachYou[0] || person.canTeach[0] || "A new skill";
+      selectedYouTeach = exchange.youCanTeachThem[0] || currentUser.canTeach[0] || "A useful skill";
+      selectedSession = "30 min ↔ 30 min";
+      selectedTime = "";
+      $("matchPersonTitle").textContent = `${person.name}, ${person.age}`;
+      $("matchMeta").textContent = `${person.major} • ${person.university}`;
+      $("matchIntro").textContent = `${person.name} can teach ${selectedTheyTeach}, and wants to learn ${selectedYouTeach}.`;
+      $("theyTeach").textContent = selectedTheyTeach;
+      $("youTeach").textContent = selectedYouTeach;
+      document.querySelectorAll(".duration-btn").forEach((btn, i) => btn.classList.toggle("selected", i === 0));
+    }
+
+    function handleLike() {
+      const person = profiles[currentProfile];
+      if (!person) return;
+      if (person.likesYou) {
+        matchedPerson = person;
+        matchCount += 1;
+        $("matchCount").textContent = matchCount;
+        prepareMatchScreen(person);
+        openScreen("matchScreen");
+      } else {
+        showToast("Not a match this time — keep going");
+      }
+      animateCard("right");
+    }
+
+    function animateCard(direction) {
+      const card = $("profileCard");
+      if (!card) return;
+      card.classList.add(direction === "left" ? "swipe-left" : "swipe-right");
+      window.setTimeout(() => { currentProfile += 1; showProfile(); }, 330);
+    }
+
+    function openCalendar() {
+      if (!matchedPerson) return;
+      renderCalendar();
+      openScreen("calendarScreen");
+    }
+
+    function renderCalendar() {
+      const slots = matchedPerson.availableSlots || [];
+      const groups = [
+        {title:"Morning (08:00 - 12:00)", items:slots.filter(s => /10:|11:|09:/.test(s))},
+        {title:"Afternoon (12:00 - 18:00)", items:slots.filter(s => /13:|14:|15:|16:|17:/.test(s))},
+        {title:"Evening (18:00 - 22:00)", items:slots.filter(s => /18:|19:|20:|21:/.test(s))}
+      ];
+      if (!groups.some(g => g.items.length)) groups[1].items = slots;
+      $("calendarGrid").innerHTML = groups.filter(g => g.items.length).map(group => `<section class="slot-group"><div class="slot-group-title">${group.title}</div><div class="slot-grid">${group.items.map(slot => `<button class="time-slot" type="button" data-time="${slot}"><strong>${slot.split(" • ")[1] || slot}</strong><small>${slot.split(" • ")[0] || "Available slot"} • with ${matchedPerson.name}</small></button>`).join("")}</div></section>`).join("");
+      $("selectedTimeDisplay").innerHTML = "No time selected yet 👀";
+      $("calendarGrid").querySelectorAll(".time-slot").forEach(btn => btn.addEventListener("click", () => selectTime(btn, btn.dataset.time)));
+    }
+
+    function selectTime(button, time) {
+      selectedTime = time;
+      document.querySelectorAll(".time-slot").forEach(slot => slot.classList.remove("selected"));
+      button.classList.add("selected");
+      $("selectedTimeDisplay").innerHTML = `Selected: <strong>${time}</strong>`;
+    }
+
+    function confirmSelectedTime() {
+      if (!selectedTime) { showToast("Choose a time first 👀"); return; }
+      const newSession = { person: matchedPerson.name, image: matchedPerson.image, learn: selectedTheyTeach, teach: selectedYouTeach, duration: selectedSession, time: selectedTime };
+      bookedSessions.unshift(newSession);
+      $("confirmationDetails").innerHTML = `<div class="confirm-person">You + ${matchedPerson.name}</div>
+        <div class="confirm-line"><span>💜</span><span>You learn <strong>${selectedTheyTeach}</strong></span></div>
+        <div class="confirm-line"><span>💚</span><span>You teach <strong>${selectedYouTeach}</strong></span></div>
+        <div class="confirm-line"><span>📅</span><span><strong>${selectedTime}</strong> • ${selectedSession}</span></div>
+        <div class="confirm-line"><span>📍</span><span>PUCPR campus / agreed study space</span></div>
+        <div class="confirm-line"><span>💸</span><span>Price: <strong>€0</strong></span></div>`;
+      openScreen("confirmationScreen");
+      launchBeers();
+    }
+
+    function renderSessions() {
+      if (!bookedSessions.length) {
+        $("sessionsList").innerHTML = `<div class="empty-state"><div style="font-size:38px">📚</div><h3 style="color:#12131b">No exchanges yet</h3><p>Book a SkillSwap and it will appear here.</p></div>`;
+        return;
+      }
+      $("sessionsList").innerHTML = bookedSessions.map(session => `<article class="session-card"><div class="session-card-top"><div class="avatar"><img src="${session.image}" alt="" onerror="this.remove()">${session.person.charAt(0)}</div><div class="session-main"><div class="session-name">${session.person}</div><div class="session-exchange">${session.teach} ➜ ${session.learn}</div></div><div class="session-time">Upcoming</div></div><div class="session-meta">${session.time} • ${session.duration}<br>PUCPR campus</div></article>`).join("");
+    }
+
+    function launchBeers() {
+      const count = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 6 : 20;
+      for (let i = 0; i < count; i += 1) {
+        const beer = document.createElement("div");
+        beer.className = "flying-beer";
+        beer.textContent = i % 5 === 0 ? "🍻" : "🍺";
+        beer.style.left = `${Math.random() * 92}%`;
+        beer.style.fontSize = `${28 + Math.random() * 34}px`;
+        beer.style.animationDelay = `${Math.random() * .72}s`;
+        beer.style.setProperty("--drift", `${-70 + Math.random() * 140}px`);
+        app.appendChild(beer);
+        window.setTimeout(() => beer.remove(), 4100);
+      }
+    }
+
+    function openScreen(id) {
+      document.querySelectorAll(".screen").forEach(screen => screen.classList.remove("open"));
+      $(id).classList.add("open");
+      $(id).scrollTop = 0;
+    }
+
+    function closeScreen(id) { $(id).classList.remove("open"); }
+
+    let toastTimer = null;
+    function showToast(message) {
+      const toast = $("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      window.clearTimeout(toastTimer);
+      toastTimer = window.setTimeout(() => toast.classList.remove("show"), 2200);
+    }
+
+    $("reject").addEventListener("click", () => animateCard("left"));
+    $("like").addEventListener("click", handleLike);
+    $("details").addEventListener("click", openDetails);
+    $("closeDetails").addEventListener("click", () => closeScreen("detailsScreen"));
+    $("closeMatch").addEventListener("click", () => closeScreen("matchScreen"));
+    $("keepSwiping").addEventListener("click", () => closeScreen("matchScreen"));
+    $("openCalendar").addEventListener("click", openCalendar);
+    $("closeCalendar").addEventListener("click", () => { closeScreen("calendarScreen"); openScreen("matchScreen"); });
+    $("confirmTime").addEventListener("click", confirmSelectedTime);
+    $("finishSession").addEventListener("click", () => closeScreen("confirmationScreen"));
+    $("openSessionsFromConfirmation").addEventListener("click", () => { renderSessions(); openScreen("sessionsScreen"); });
+    $("sessionsShortcut").addEventListener("click", () => { renderSessions(); openScreen("sessionsScreen"); });
+    $("closeSessions").addEventListener("click", () => closeScreen("sessionsScreen"));
+    $("durationGrid").addEventListener("click", (event) => {
+      const btn = event.target.closest(".duration-btn");
+      if (!btn) return;
+      selectedSession = btn.dataset.duration;
+      document.querySelectorAll(".duration-btn").forEach(item => item.classList.toggle("selected", item === btn));
+    });
+
+    showMySkills();
+    showProfile();
+  </script>
+</body>
+</html>

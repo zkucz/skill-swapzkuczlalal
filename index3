@@ -1,0 +1,3140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>SkillSwap</title>
+
+  <style>
+
+    /* =====================================================
+       COLORS
+       CHANGE THESE IF YOU WANT TO RECOLOR THE WHOLE APP
+    ===================================================== */
+
+    :root {
+      --primary: #246BFD;
+      --primary-dark: #1749B8;
+      --primary-light: #E7EFFF;
+
+      --secondary: #FFD84D;
+      --secondary-dark: #B88A00;
+      --secondary-light: #FFF6C7;
+
+      --dark: #172554;
+      --background: #F6F8FF;
+
+      --white: #FFFFFF;
+      --gray: #777777;
+      --light-gray: #EEEEEE;
+    }
+
+
+    /* =====================================================
+       GENERAL
+    ===================================================== */
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+
+      background:
+        linear-gradient(
+          135deg,
+          #E7EFFF,
+          #FFF6C7
+        );
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      padding: 30px 0;
+    }
+
+    .app {
+      width: 400px;
+      min-height: 800px;
+
+      background: white;
+
+      border-radius: 30px;
+
+      overflow: hidden;
+
+      box-shadow:
+        0 15px 45px
+        rgba(0, 0, 0, 0.15);
+
+      position: relative;
+    }
+
+
+    /* =====================================================
+       HEADER
+    ===================================================== */
+
+    header {
+      height: 80px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      padding: 0 22px;
+
+      border-bottom:
+        1px solid var(--light-gray);
+    }
+
+    .logo {
+      font-size: 27px;
+      font-weight: bold;
+
+      color: var(--primary);
+    }
+
+    .logo span {
+      color: var(--secondary-dark);
+    }
+
+    .header-right {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .match-counter {
+      font-size: 12px;
+
+      background:
+        var(--primary-light);
+
+      color:
+        var(--primary);
+
+      padding:
+        8px 10px;
+
+      border-radius:
+        20px;
+    }
+
+    .sessions-button {
+      border: none;
+
+      background:
+        var(--secondary);
+
+      color:
+        var(--dark);
+
+      padding:
+        8px 10px;
+
+      border-radius:
+        20px;
+
+      font-size:
+        12px;
+
+      cursor:
+        pointer;
+
+      font-weight:
+        bold;
+    }
+
+
+    /* =====================================================
+       YOUR SKILLS
+    ===================================================== */
+
+    .your-skills {
+      padding:
+        16px 22px 3px;
+    }
+
+    .your-skills h3 {
+      font-size:
+        13px;
+
+      color:
+        var(--gray);
+
+      margin:
+        7px 0;
+    }
+
+    .mini-tag {
+      display:
+        inline-block;
+
+      background:
+        #F1F3F8;
+
+      padding:
+        5px 9px;
+
+      border-radius:
+        12px;
+
+      font-size:
+        11px;
+
+      margin:
+        2px;
+    }
+
+
+    /* =====================================================
+       PROFILE CARD
+    ===================================================== */
+
+    .card-area {
+      padding:
+        15px 20px;
+    }
+
+    .card {
+      background:
+        white;
+
+      border-radius:
+        25px;
+
+      overflow:
+        hidden;
+
+      box-shadow:
+        0 8px 30px
+        rgba(0, 0, 0, 0.13);
+
+      transition:
+        transform 0.35s ease,
+        opacity 0.35s ease;
+    }
+
+    .profile-image {
+      height:
+        250px;
+
+      display:
+        flex;
+
+      justify-content:
+        center;
+
+      align-items:
+        center;
+
+      font-size:
+        80px;
+
+      color:
+        white;
+
+      font-weight:
+        bold;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--primary),
+          var(--secondary)
+        );
+    }
+
+    .profile-info {
+      padding:
+        20px;
+    }
+
+    .name-line {
+      display:
+        flex;
+
+      justify-content:
+        space-between;
+
+      align-items:
+        center;
+
+      gap:
+        10px;
+    }
+
+    .name-line h2 {
+      font-size:
+        23px;
+    }
+
+    .match-score {
+      background:
+        #E7FFF0;
+
+      color:
+        #0B9C50;
+
+      font-weight:
+        bold;
+
+      padding:
+        6px 10px;
+
+      border-radius:
+        15px;
+
+      font-size:
+        12px;
+
+      white-space:
+        nowrap;
+    }
+
+    .university {
+      color:
+        var(--gray);
+
+      margin-top:
+        5px;
+
+      font-size:
+        14px;
+    }
+
+    .bio {
+      margin-top:
+        12px;
+
+      line-height:
+        1.4;
+
+      color:
+        #444;
+
+      font-size:
+        14px;
+    }
+
+    .skill-section {
+      margin-top:
+        14px;
+    }
+
+    .skill-section h4 {
+      margin-bottom:
+        7px;
+
+      font-size:
+        12px;
+
+      color:
+        #666;
+    }
+
+    .tag {
+      display:
+        inline-block;
+
+      padding:
+        7px 10px;
+
+      border-radius:
+        15px;
+
+      margin:
+        3px 2px;
+
+      font-size:
+        11px;
+    }
+
+    .teach {
+      background:
+        var(--primary-light);
+
+      color:
+        var(--primary);
+    }
+
+    .learn {
+      background:
+        var(--secondary-light);
+
+      color:
+        var(--secondary-dark);
+    }
+
+
+    /* =====================================================
+       SWIPE BUTTONS
+    ===================================================== */
+
+    .buttons {
+      display:
+        flex;
+
+      justify-content:
+        center;
+
+      gap:
+        35px;
+
+      padding:
+        2px 0 25px;
+    }
+
+    .round-button {
+      width:
+        65px;
+
+      height:
+        65px;
+
+      border-radius:
+        50%;
+
+      border:
+        none;
+
+      cursor:
+        pointer;
+
+      font-size:
+        28px;
+
+      background:
+        white;
+
+      box-shadow:
+        0 5px 18px
+        rgba(0, 0, 0, 0.15);
+
+      transition:
+        0.2s;
+    }
+
+    .round-button:hover {
+      transform:
+        scale(1.12);
+    }
+
+    #reject {
+      color:
+        #FF4F70;
+    }
+
+    #like {
+      color:
+        var(--primary);
+    }
+
+
+    /* =====================================================
+       POPUPS
+    ===================================================== */
+
+    .popup {
+      position:
+        absolute;
+
+      inset:
+        0;
+
+      background:
+        linear-gradient(
+          150deg,
+          var(--primary),
+          var(--dark)
+        );
+
+      display:
+        none;
+
+      align-items:
+        center;
+
+      justify-content:
+        center;
+
+      z-index:
+        50;
+
+      padding:
+        28px;
+
+      overflow-y:
+        auto;
+    }
+
+    .popup-content {
+      color:
+        white;
+
+      text-align:
+        center;
+
+      width:
+        100%;
+    }
+
+    .popup-content h1 {
+      font-size:
+        36px;
+
+      color:
+        var(--secondary);
+
+      margin-bottom:
+        10px;
+    }
+
+    .popup-content p {
+      line-height:
+        1.5;
+
+      opacity:
+        0.9;
+    }
+
+
+    /* =====================================================
+       SKILL EXCHANGE BOX
+    ===================================================== */
+
+    .exchange-box {
+      margin:
+        24px 0;
+
+      background:
+        rgba(
+          255,
+          255,
+          255,
+          0.12
+        );
+
+      border-radius:
+        22px;
+
+      padding:
+        18px;
+
+      text-align:
+        left;
+    }
+
+    .exchange-person {
+      padding:
+        10px 0;
+    }
+
+    .exchange-person strong {
+      display:
+        block;
+
+      margin-bottom:
+        6px;
+
+      color:
+        var(--secondary);
+    }
+
+    .exchange-skill {
+      background:
+        white;
+
+      color:
+        var(--primary);
+
+      padding:
+        8px 11px;
+
+      border-radius:
+        15px;
+
+      display:
+        inline-block;
+
+      font-weight:
+        bold;
+
+      font-size:
+        13px;
+    }
+
+    .swap-arrow {
+      text-align:
+        center;
+
+      font-size:
+        27px;
+
+      margin:
+        4px;
+    }
+
+
+    /* =====================================================
+       SESSION LENGTH
+    ===================================================== */
+
+    .session-title {
+      margin-top:
+        15px;
+
+      font-size:
+        14px;
+    }
+
+    .session-options {
+      display:
+        flex;
+
+      gap:
+        8px;
+
+      justify-content:
+        center;
+
+      margin:
+        15px 0;
+
+      flex-wrap:
+        wrap;
+    }
+
+    .session-button {
+      border:
+        2px solid
+        rgba(
+          255,
+          255,
+          255,
+          0.35
+        );
+
+      background:
+        transparent;
+
+      color:
+        white;
+
+      border-radius:
+        18px;
+
+      padding:
+        10px 13px;
+
+      cursor:
+        pointer;
+
+      transition:
+        0.2s;
+    }
+
+    .session-button:hover,
+    .session-button.selected {
+      background:
+        var(--secondary);
+
+      color:
+        var(--dark);
+
+      border-color:
+        var(--secondary);
+    }
+
+
+    /* =====================================================
+       NORMAL BUTTONS
+    ===================================================== */
+
+    .main-button {
+      display:
+        block;
+
+      width:
+        100%;
+
+      margin-top:
+        10px;
+
+      padding:
+        14px;
+
+      border:
+        none;
+
+      border-radius:
+        22px;
+
+      font-weight:
+        bold;
+
+      font-size:
+        15px;
+
+      cursor:
+        pointer;
+
+      color:
+        var(--dark);
+
+      background:
+        var(--secondary);
+    }
+
+    .main-button:hover {
+      transform:
+        scale(1.02);
+    }
+
+    .secondary-button {
+      background:
+        transparent;
+
+      border:
+        none;
+
+      color:
+        #dddddd;
+
+      cursor:
+        pointer;
+
+      margin-top:
+        15px;
+    }
+
+
+    /* =====================================================
+       AVAILABILITY CALENDAR
+    ===================================================== */
+
+    .calendar-container {
+      margin-top:
+        20px;
+
+      width:
+        100%;
+    }
+
+    .calendar-title {
+      font-size:
+        14px;
+
+      margin-bottom:
+        14px;
+
+      color:
+        white;
+    }
+
+    .calendar-grid {
+      display:
+        grid;
+
+      grid-template-columns:
+        repeat(
+          2,
+          1fr
+        );
+
+      gap:
+        10px;
+    }
+
+    .time-slot {
+      padding:
+        13px 8px;
+
+      border-radius:
+        15px;
+
+      background:
+        rgba(
+          255,
+          255,
+          255,
+          0.12
+        );
+
+      border:
+        2px solid
+        rgba(
+          255,
+          255,
+          255,
+          0.2
+        );
+
+      color:
+        white;
+
+      cursor:
+        pointer;
+
+      transition:
+        0.2s;
+
+      font-size:
+        12px;
+    }
+
+    .time-slot:hover {
+      background:
+        var(--secondary);
+
+      color:
+        var(--dark);
+
+      transform:
+        scale(1.03);
+    }
+
+    .time-slot.selected {
+      background:
+        var(--secondary);
+
+      color:
+        var(--dark);
+
+      border-color:
+        white;
+
+      font-weight:
+        bold;
+    }
+
+    .selected-time {
+      margin-top:
+        16px;
+
+      padding:
+        12px;
+
+      border-radius:
+        15px;
+
+      background:
+        rgba(
+          255,
+          255,
+          255,
+          0.1
+        );
+
+      font-size:
+        13px;
+    }
+
+
+    /* =====================================================
+       CONFIRMATION
+    ===================================================== */
+
+    .confirmation-icon {
+      font-size:
+        70px;
+
+      margin-bottom:
+        20px;
+    }
+
+    .confirmation-card {
+      background:
+        rgba(
+          255,
+          255,
+          255,
+          0.12
+        );
+
+      margin-top:
+        20px;
+
+      border-radius:
+        20px;
+
+      padding:
+        20px;
+
+      line-height:
+        1.8;
+    }
+
+
+    /* =====================================================
+       MY SESSIONS
+    ===================================================== */
+
+    .sessions-list {
+      margin-top:
+        20px;
+
+      display:
+        flex;
+
+      flex-direction:
+        column;
+
+      gap:
+        12px;
+    }
+
+    .session-card {
+      background:
+        white;
+
+      color:
+        var(--dark);
+
+      text-align:
+        left;
+
+      padding:
+        16px;
+
+      border-radius:
+        18px;
+
+      line-height:
+        1.6;
+    }
+
+    .session-card h3 {
+      color:
+        var(--primary);
+
+      margin-bottom:
+        5px;
+    }
+
+    .session-empty {
+      margin-top:
+        30px;
+
+      padding:
+        25px;
+
+      background:
+        rgba(
+          255,
+          255,
+          255,
+          0.1
+        );
+
+      border-radius:
+        20px;
+    }
+
+
+    /* =====================================================
+       FLYING BEERS 🍺
+    ===================================================== */
+
+    .flying-beer {
+      position:
+        absolute;
+
+      bottom:
+        -80px;
+
+      font-size:
+        45px;
+
+      pointer-events:
+        none;
+
+      z-index:
+        999;
+
+      animation:
+        beerFly
+        2.5s
+        ease-out
+        forwards;
+    }
+
+    @keyframes beerFly {
+
+      0% {
+        transform:
+          translateY(0)
+          rotate(0deg)
+          scale(0.5);
+
+        opacity:
+          0;
+      }
+
+      20% {
+        opacity:
+          1;
+      }
+
+      100% {
+        transform:
+          translateY(-900px)
+          rotate(720deg)
+          scale(1.4);
+
+        opacity:
+          0;
+      }
+
+    }
+
+
+    /* =====================================================
+       END SCREEN
+    ===================================================== */
+
+    .empty {
+      height:
+        470px;
+
+      display:
+        flex;
+
+      justify-content:
+        center;
+
+      align-items:
+        center;
+
+      text-align:
+        center;
+
+      padding:
+        30px;
+
+      color:
+        var(--gray);
+    }
+
+  </style>
+</head>
+
+
+<body>
+
+<div class="app">
+
+
+  <!-- =====================================================
+       HEADER
+  ====================================================== -->
+
+  <header>
+
+    <div class="logo">
+      Skill<span>Swap</span>
+    </div>
+
+
+    <div class="header-right">
+
+      <button
+        class="sessions-button"
+        onclick="openMySessions()"
+      >
+        📅 Sessions
+      </button>
+
+
+      <div class="match-counter">
+
+        💙
+
+        <span id="matchCount">
+          0
+        </span>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+
+  <!-- =====================================================
+       YOUR PROFILE
+  ====================================================== -->
+
+  <div class="your-skills">
+
+    <h3>
+      You can teach:
+    </h3>
+
+    <div id="myTeachSkills"></div>
+
+
+    <h3>
+      You want to learn:
+    </h3>
+
+    <div id="myLearnSkills"></div>
+
+  </div>
+
+
+
+  <!-- =====================================================
+       PROFILE
+  ====================================================== -->
+
+  <div class="card-area">
+
+    <div id="card"></div>
+
+  </div>
+
+
+
+  <!-- =====================================================
+       SWIPE BUTTONS
+  ====================================================== -->
+
+  <div class="buttons">
+
+    <button
+      class="round-button"
+      id="reject"
+    >
+      ✕
+    </button>
+
+
+    <button
+      class="round-button"
+      id="like"
+    >
+      ♥
+    </button>
+
+  </div>
+
+
+
+  <!-- =====================================================
+       MATCH POPUP
+  ====================================================== -->
+
+  <div
+    class="popup"
+    id="matchPopup"
+  >
+
+    <div class="popup-content">
+
+      <h1>
+        It's a Skill Match! 🎉
+      </h1>
+
+
+      <p id="matchIntro"></p>
+
+
+      <div class="exchange-box">
+
+
+        <div class="exchange-person">
+
+          <strong id="otherPersonLabel">
+            They teach you:
+          </strong>
+
+          <span
+            class="exchange-skill"
+            id="theyTeach"
+          >
+          </span>
+
+        </div>
+
+
+        <div class="swap-arrow">
+          ⇅
+        </div>
+
+
+        <div class="exchange-person">
+
+          <strong>
+            You teach them:
+          </strong>
+
+          <span
+            class="exchange-skill"
+            id="youTeach"
+          >
+          </span>
+
+        </div>
+
+      </div>
+
+
+
+      <div class="session-title">
+
+        How long should your SkillSwap be?
+
+      </div>
+
+
+      <div class="session-options">
+
+        <button
+          class="session-button selected"
+          onclick="
+            chooseSession(
+              this,
+              '30 min ↔ 30 min'
+            )
+          "
+        >
+          30 ↔ 30
+        </button>
+
+
+        <button
+          class="session-button"
+          onclick="
+            chooseSession(
+              this,
+              '45 min ↔ 45 min'
+            )
+          "
+        >
+          45 ↔ 45
+        </button>
+
+
+        <button
+          class="session-button"
+          onclick="
+            chooseSession(
+              this,
+              '60 min ↔ 60 min'
+            )
+          "
+        >
+          60 ↔ 60
+        </button>
+
+      </div>
+
+
+      <button
+        class="main-button"
+        onclick="openCalendar()"
+      >
+        📅 See Available Times
+      </button>
+
+
+      <button
+        class="secondary-button"
+        onclick="closeMatch()"
+      >
+        Keep Swiping
+      </button>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- =====================================================
+       CALENDAR
+  ====================================================== -->
+
+  <div
+    class="popup"
+    id="calendarPopup"
+  >
+
+    <div class="popup-content">
+
+      <h1>
+        Find a Time 📅
+      </h1>
+
+
+      <p id="calendarPerson"></p>
+
+
+      <div class="calendar-container">
+
+        <div class="calendar-title">
+
+          Available SkillSwap sessions:
+
+        </div>
+
+
+        <div
+          class="calendar-grid"
+          id="calendarGrid"
+        >
+        </div>
+
+
+        <div
+          class="selected-time"
+          id="selectedTimeDisplay"
+        >
+          No time selected yet 👀
+        </div>
+
+      </div>
+
+
+      <button
+        class="main-button"
+        onclick="confirmSelectedTime()"
+      >
+        Confirm Session 🚀
+      </button>
+
+
+      <button
+        class="secondary-button"
+        onclick="closeCalendar()"
+      >
+        Go Back
+      </button>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- =====================================================
+       CONFIRMATION
+  ====================================================== -->
+
+  <div
+    class="popup"
+    id="confirmationPopup"
+  >
+
+    <div class="popup-content">
+
+
+      <div class="confirmation-icon">
+        🍻
+      </div>
+
+
+      <h1>
+        Session Planned!
+      </h1>
+
+
+      <p>
+        Congratulations. You successfully
+        used your social skills.
+      </p>
+
+
+      <div
+        class="confirmation-card"
+        id="confirmationDetails"
+      >
+      </div>
+
+
+      <button
+        class="main-button"
+        onclick="finishSession()"
+      >
+        Keep Swiping 💙
+      </button>
+
+
+      <button
+        class="secondary-button"
+        onclick="openMySessionsFromConfirmation()"
+      >
+        View My Sessions
+      </button>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- =====================================================
+       MY SESSIONS
+  ====================================================== -->
+
+  <div
+    class="popup"
+    id="sessionsPopup"
+  >
+
+    <div class="popup-content">
+
+      <h1>
+        My SkillSwaps 📚
+      </h1>
+
+
+      <p>
+        Your upcoming learning sessions.
+      </p>
+
+
+      <div
+        class="sessions-list"
+        id="sessionsList"
+      >
+      </div>
+
+
+      <button
+        class="main-button"
+        onclick="closeMySessions()"
+      >
+        Back to Swiping
+      </button>
+
+    </div>
+
+  </div>
+
+
+</div>
+
+
+
+<script>
+
+  /* =====================================================
+     YOUR PROFILE
+  ===================================================== */
+
+  const currentUser = {
+
+    name:
+      "You",
+
+    canTeach: [
+      "Python",
+      "Excel",
+      "English",
+      "Bad Dancing",
+      "Surviving Group Projects"
+    ],
+
+    wantsToLearn: [
+      "Portuguese",
+      "Graphic Design",
+      "Guitar",
+      "Cooking",
+      "Dad Jokes"
+    ]
+
+  };
+
+
+  /* =====================================================
+     OTHER STUDENTS
+  ===================================================== */
+
+  const profiles = [
+
+    {
+      name: "Ana",
+
+      age: 22,
+
+      university:
+        "PUCPR",
+
+      bio:
+        "I love photography, travelling and pretending I understand Brazilian bureaucracy.",
+
+      canTeach: [
+        "Portuguese",
+        "Photography",
+        "Finding Cheap Flights"
+      ],
+
+      wantsToLearn: [
+        "Python",
+        "Excel",
+        "English"
+      ],
+
+      likesYou:
+        true,
+
+      availableSlots: [
+        "Monday • 18:00",
+        "Tuesday • 16:30",
+        "Wednesday • 19:00",
+        "Friday • 14:00"
+      ]
+    },
+
+
+    {
+      name: "Lucas",
+
+      age: 21,
+
+      university:
+        "PUCPR",
+
+      bio:
+        "Design student. My entire personality is basically Figma and iced coffee.",
+
+      canTeach: [
+        "Graphic Design",
+        "Figma",
+        "Photoshop"
+      ],
+
+      wantsToLearn: [
+        "English",
+        "Python",
+        "Making Good Coffee"
+      ],
+
+      likesYou:
+        true,
+
+      availableSlots: [
+        "Monday • 15:00",
+        "Tuesday • 19:30",
+        "Thursday • 17:00",
+        "Saturday • 13:00"
+      ]
+    },
+
+
+    {
+      name: "Maria",
+
+      age: 23,
+
+      university:
+        "UFPR",
+
+      bio:
+        "Music student. I own a guitar and therefore legally have to bring it to every party.",
+
+      canTeach: [
+        "Guitar",
+        "Music Theory",
+        "Karaoke Confidence"
+      ],
+
+      wantsToLearn: [
+        "Excel",
+        "Photography",
+        "Bad Dancing"
+      ],
+
+      likesYou:
+        true,
+
+      availableSlots: [
+        "Tuesday • 18:00",
+        "Wednesday • 16:00",
+        "Friday • 20:00"
+      ]
+    },
+
+
+    {
+      name: "John",
+
+      age: 22,
+
+      university:
+        "PUCPR",
+
+      bio:
+        "Business student. Says 'networking opportunity' instead of 'party'.",
+
+      canTeach: [
+        "Finance",
+        "Marketing",
+        "LinkedIn Survival"
+      ],
+
+      wantsToLearn: [
+        "Python",
+        "English",
+        "Graphic Design"
+      ],
+
+      likesYou:
+        false,
+
+      availableSlots: [
+        "Monday • 14:00",
+        "Thursday • 19:00"
+      ]
+    },
+
+
+    {
+      name: "Pedro",
+
+      age: 24,
+
+      university:
+        "PUCPR",
+
+      bio:
+        "I have reached the age where making people groan at jokes brings me genuine happiness.",
+
+      canTeach: [
+        "Dad Jokes",
+        "Portuguese",
+        "BBQ"
+      ],
+
+      wantsToLearn: [
+        "Excel",
+        "English",
+        "Photography"
+      ],
+
+      likesYou:
+        true,
+
+      availableSlots: [
+        "Monday • 20:00",
+        "Wednesday • 17:00",
+        "Thursday • 18:30",
+        "Saturday • 15:00"
+      ]
+    },
+
+
+    {
+      name: "Sofia",
+
+      age: 20,
+
+      university:
+        "UFPR",
+
+      bio:
+        "Can cook approximately seven meals. Five of them involve pasta.",
+
+      canTeach: [
+        "Cooking",
+        "Pasta Without Burning It",
+        "Meal Prep"
+      ],
+
+      wantsToLearn: [
+        "English",
+        "Excel",
+        "Guitar"
+      ],
+
+      likesYou:
+        true,
+
+      availableSlots: [
+        "Tuesday • 18:00",
+        "Thursday • 16:00",
+        "Friday • 19:00",
+        "Sunday • 15:30"
+      ]
+    },
+
+
+    {
+      name: "Rafael",
+
+      age: 22,
+
+      university:
+        "PUCPR",
+
+      bio:
+        "I can park a car in spaces that appear physically impossible.",
+
+      canTeach: [
+        "Parallel Parking",
+        "Driving",
+        "Changing a Tire"
+      ],
+
+      wantsToLearn: [
+        "English",
+        "Python",
+        "Cooking"
+      ],
+
+      likesYou:
+        false,
+
+      availableSlots: [
+        "Wednesday • 18:00",
+        "Saturday • 10:00"
+      ]
+    },
+
+
+    {
+      name: "Julia",
+
+      age: 21,
+
+      university:
+        "PUCPR",
+
+      bio:
+        "Professional procrastinator. Somehow everything still gets submitted at 23:58.",
+
+      canTeach: [
+        "Professional Procrastination",
+        "Canva",
+        "Presentation Design"
+      ],
+
+      wantsToLearn: [
+        "Excel",
+        "Python",
+        "Time Management"
+      ],
+
+      likesYou:
+        true,
+
+      availableSlots: [
+        "Monday • 17:30",
+        "Wednesday • 19:30",
+        "Thursday • 15:00"
+      ]
+    },
+
+
+    {
+      name: "Mateus",
+
+      age: 23,
+
+      university:
+        "UTFPR",
+
+      bio:
+        "Computer science student. Can fix your laptop but absolutely not your emotional problems.",
+
+      canTeach: [
+        "JavaScript",
+        "Cybersecurity Basics",
+        "Fixing Wi-Fi"
+      ],
+
+      wantsToLearn: [
+        "English",
+        "Graphic Design",
+        "Bad Dancing"
+      ],
+
+      likesYou:
+        true,
+
+      availableSlots: [
+        "Tuesday • 20:00",
+        "Thursday • 19:00",
+        "Saturday • 17:00"
+      ]
+    },
+
+
+    {
+      name: "Camila",
+
+      age: 22,
+
+      university:
+        "PUCPR",
+
+      bio:
+        "My toxic trait is believing every houseplant can be saved.",
+
+      canTeach: [
+        "Plant Care",
+        "Portuguese",
+        "Making Good Coffee"
+      ],
+
+      wantsToLearn: [
+        "Python",
+        "Excel",
+        "Photography"
+      ],
+
+      likesYou:
+        true,
+
+      availableSlots: [
+        "Monday • 16:00",
+        "Wednesday • 18:30",
+        "Friday • 16:00"
+      ]
+    },
+
+
+    {
+      name: "Bruno",
+
+      age: 24,
+
+      university:
+        "UFPR",
+
+      bio:
+        "Can produce a meme about almost any situation within approximately 45 seconds.",
+
+      canTeach: [
+        "Meme Creation",
+        "Video Editing",
+        "Social Media"
+      ],
+
+      wantsToLearn: [
+        "English",
+        "Python",
+        "Cooking"
+      ],
+
+      likesYou:
+        false,
+
+      availableSlots: [
+        "Tuesday • 15:00",
+        "Friday • 18:00"
+      ]
+    },
+
+
+    {
+      name: "Beatriz",
+
+      age: 21,
+
+      university:
+        "PUCPR",
+
+      bio:
+        "I take karaoke way more seriously than any reasonable person should.",
+
+      canTeach: [
+        "Singing",
+        "Karaoke Confidence",
+        "Portuguese"
+      ],
+
+      wantsToLearn: [
+        "Excel",
+        "English",
+        "Bad Dancing"
+      ],
+
+      likesYou:
+        true,
+
+      availableSlots: [
+        "Tuesday • 17:00",
+        "Thursday • 20:00",
+        "Sunday • 14:00"
+      ]
+    },
+
+
+    {
+      name: "Gabriel",
+
+      age: 22,
+
+      university:
+        "UTFPR",
+
+      bio:
+        "Has somehow survived 11 group projects without starting a civil war.",
+
+      canTeach: [
+        "Surviving Group Projects",
+        "Public Speaking",
+        "PowerPoint"
+      ],
+
+      wantsToLearn: [
+        "Graphic Design",
+        "Python",
+        "Guitar"
+      ],
+
+      likesYou:
+        true,
+
+      availableSlots: [
+        "Monday • 19:00",
+        "Wednesday • 15:30",
+        "Friday • 17:00"
+      ]
+    },
+
+
+    {
+      name: "Isabela",
+
+      age: 23,
+
+      university:
+        "PUCPR",
+
+      bio:
+        "Can turn a five-minute story into a forty-minute story with absolutely no regrets.",
+
+      canTeach: [
+        "Storytelling",
+        "Portuguese",
+        "Public Speaking"
+      ],
+
+      wantsToLearn: [
+        "Excel",
+        "Python",
+        "Cooking"
+      ],
+
+      likesYou:
+        true,
+
+      availableSlots: [
+        "Tuesday • 16:00",
+        "Thursday • 18:00",
+        "Saturday • 14:00"
+      ]
+    }
+
+  ];
+
+
+
+  /* =====================================================
+     VARIABLES
+  ===================================================== */
+
+  let currentProfile =
+    0;
+
+  let matchCount =
+    0;
+
+  let matchedPerson =
+    null;
+
+  let selectedSession =
+    "30 min ↔ 30 min";
+
+  let selectedTheyTeach =
+    "";
+
+  let selectedYouTeach =
+    "";
+
+  let selectedTime =
+    "";
+
+  let bookedSessions =
+    [];
+
+
+
+  /* =====================================================
+     SHOW YOUR SKILLS
+  ===================================================== */
+
+  function showMySkills() {
+
+    const teach =
+      document.getElementById(
+        "myTeachSkills"
+      );
+
+
+    const learn =
+      document.getElementById(
+        "myLearnSkills"
+      );
+
+
+    teach.innerHTML =
+      currentUser.canTeach
+
+        .map(
+          skill =>
+            `<span class="mini-tag">
+              ${skill}
+            </span>`
+        )
+
+        .join("");
+
+
+    learn.innerHTML =
+      currentUser.wantsToLearn
+
+        .map(
+          skill =>
+            `<span class="mini-tag">
+              ${skill}
+            </span>`
+        )
+
+        .join("");
+
+  }
+
+
+
+  /* =====================================================
+     FIND SKILL EXCHANGE
+  ===================================================== */
+
+  function findSkillExchange(
+    person
+  ) {
+
+    const theyCanTeachYou =
+      person.canTeach.filter(
+        skill =>
+          currentUser
+            .wantsToLearn
+            .includes(skill)
+      );
+
+
+    const youCanTeachThem =
+      currentUser.canTeach.filter(
+        skill =>
+          person
+            .wantsToLearn
+            .includes(skill)
+      );
+
+
+    return {
+
+      theyCanTeachYou,
+
+      youCanTeachThem
+
+    };
+
+  }
+
+
+
+  /* =====================================================
+     CALCULATE MATCH SCORE
+  ===================================================== */
+
+  function calculateMatch(
+    person
+  ) {
+
+    const exchange =
+      findSkillExchange(
+        person
+      );
+
+
+    const incoming =
+      exchange
+        .theyCanTeachYou
+        .length;
+
+
+    const outgoing =
+      exchange
+        .youCanTeachThem
+        .length;
+
+
+    if (
+      incoming > 0 &&
+      outgoing > 0
+    ) {
+
+      return Math.min(
+        98,
+
+        82 +
+        incoming * 5 +
+        outgoing * 4
+      );
+
+    }
+
+
+    if (
+      incoming > 0 ||
+      outgoing > 0
+    ) {
+
+      return (
+        63 +
+        Math.max(
+          incoming,
+          outgoing
+        ) * 5
+      );
+
+    }
+
+
+    return 31;
+
+  }
+
+
+
+  /* =====================================================
+     SHOW PROFILE
+  ===================================================== */
+
+  function showProfile() {
+
+    const card =
+      document.getElementById(
+        "card"
+      );
+
+
+    if (
+      currentProfile >=
+      profiles.length
+    ) {
+
+      card.innerHTML = `
+
+        <div class="empty">
+
+          <div>
+
+            <h2>
+              You swiped everyone 👀
+            </h2>
+
+            <br>
+
+            <p>
+              Congratulations.
+              You have officially
+              completed the university.
+            </p>
+
+          </div>
+
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+
+    const person =
+      profiles[
+        currentProfile
+      ];
+
+
+    const score =
+      calculateMatch(
+        person
+      );
+
+
+    const firstLetter =
+      person.name.charAt(0);
+
+
+    card.innerHTML = `
+
+      <div class="card">
+
+        <div class="profile-image">
+
+          ${firstLetter}
+
+        </div>
+
+
+        <div class="profile-info">
+
+          <div class="name-line">
+
+            <h2>
+
+              ${person.name},
+              ${person.age}
+
+            </h2>
+
+
+            <div class="match-score">
+
+              ${score}% MATCH
+
+            </div>
+
+          </div>
+
+
+          <div class="university">
+
+            🎓 ${person.university}
+
+          </div>
+
+
+          <p class="bio">
+
+            ${person.bio}
+
+          </p>
+
+
+          <div class="skill-section">
+
+            <h4>
+              💙 CAN TEACH
+            </h4>
+
+            ${
+              person.canTeach
+
+                .map(
+                  skill =>
+                    `<span class="tag teach">
+                      ${skill}
+                    </span>`
+                )
+
+                .join("")
+            }
+
+          </div>
+
+
+          <div class="skill-section">
+
+            <h4>
+              💛 WANTS TO LEARN
+            </h4>
+
+            ${
+              person.wantsToLearn
+
+                .map(
+                  skill =>
+                    `<span class="tag learn">
+                      ${skill}
+                    </span>`
+                )
+
+                .join("")
+            }
+
+          </div>
+
+        </div>
+
+      </div>
+
+    `;
+
+  }
+
+
+
+  /* =====================================================
+     PASS
+  ===================================================== */
+
+  document
+    .getElementById(
+      "reject"
+    )
+    .addEventListener(
+
+      "click",
+
+      () => {
+
+        animateCard(
+          "left"
+        );
+
+      }
+
+    );
+
+
+
+  /* =====================================================
+     LIKE
+  ===================================================== */
+
+  document
+    .getElementById(
+      "like"
+    )
+    .addEventListener(
+
+      "click",
+
+      () => {
+
+        const person =
+          profiles[
+            currentProfile
+          ];
+
+
+        if (!person) {
+
+          return;
+
+        }
+
+
+        if (
+          person.likesYou
+        ) {
+
+          matchedPerson =
+            person;
+
+
+          matchCount++;
+
+
+          document
+            .getElementById(
+              "matchCount"
+            )
+            .innerText =
+              matchCount;
+
+
+          prepareMatchScreen(
+            person
+          );
+
+
+          document
+            .getElementById(
+              "matchPopup"
+            )
+            .style.display =
+              "flex";
+
+        }
+
+
+        animateCard(
+          "right"
+        );
+
+      }
+
+    );
+
+
+
+  /* =====================================================
+     PREPARE MATCH
+  ===================================================== */
+
+  function prepareMatchScreen(
+    person
+  ) {
+
+    const exchange =
+      findSkillExchange(
+        person
+      );
+
+
+    selectedTheyTeach =
+      exchange
+        .theyCanTeachYou[0]
+      ||
+      person
+        .canTeach[0];
+
+
+    selectedYouTeach =
+      exchange
+        .youCanTeachThem[0]
+      ||
+      currentUser
+        .canTeach[0];
+
+
+    selectedSession =
+      "30 min ↔ 30 min";
+
+
+    document
+      .querySelectorAll(
+        ".session-button"
+      )
+      .forEach(
+        button =>
+          button
+            .classList
+            .remove(
+              "selected"
+            )
+      );
+
+
+    const firstSessionButton =
+      document.querySelector(
+        ".session-button"
+      );
+
+
+    if (
+      firstSessionButton
+    ) {
+
+      firstSessionButton
+        .classList
+        .add(
+          "selected"
+        );
+
+    }
+
+
+    document
+      .getElementById(
+        "matchIntro"
+      )
+      .innerText =
+
+        `You and ${person.name}
+        can help each other
+        learn something new.`;
+
+
+    document
+      .getElementById(
+        "otherPersonLabel"
+      )
+      .innerText =
+
+        `${person.name}
+        teaches you:`;
+
+
+    document
+      .getElementById(
+        "theyTeach"
+      )
+      .innerText =
+        selectedTheyTeach;
+
+
+    document
+      .getElementById(
+        "youTeach"
+      )
+      .innerText =
+        selectedYouTeach;
+
+  }
+
+
+
+  /* =====================================================
+     CHOOSE SESSION LENGTH
+  ===================================================== */
+
+  function chooseSession(
+    button,
+    time
+  ) {
+
+    selectedSession =
+      time;
+
+
+    document
+      .querySelectorAll(
+        ".session-button"
+      )
+      .forEach(
+        btn =>
+          btn
+            .classList
+            .remove(
+              "selected"
+            )
+      );
+
+
+    button
+      .classList
+      .add(
+        "selected"
+      );
+
+  }
+
+
+
+  /* =====================================================
+     OPEN CALENDAR
+  ===================================================== */
+
+  function openCalendar() {
+
+    if (!matchedPerson) {
+
+      return;
+
+    }
+
+
+    document
+      .getElementById(
+        "matchPopup"
+      )
+      .style.display =
+        "none";
+
+
+    document
+      .getElementById(
+        "calendarPopup"
+      )
+      .style.display =
+        "flex";
+
+
+    document
+      .getElementById(
+        "calendarPerson"
+      )
+      .innerText =
+
+        `${matchedPerson.name}'s
+        availability`;
+
+
+    const grid =
+      document.getElementById(
+        "calendarGrid"
+      );
+
+
+    grid.innerHTML =
+      "";
+
+
+    selectedTime =
+      "";
+
+
+    document
+      .getElementById(
+        "selectedTimeDisplay"
+      )
+      .innerText =
+
+        "No time selected yet 👀";
+
+
+    matchedPerson
+      .availableSlots
+      .forEach(
+
+        time => {
+
+          const button =
+            document.createElement(
+              "button"
+            );
+
+
+          button.className =
+            "time-slot";
+
+
+          button.innerText =
+            time;
+
+
+          button.onclick =
+            function () {
+
+              selectTime(
+                button,
+                time
+              );
+
+            };
+
+
+          grid.appendChild(
+            button
+          );
+
+        }
+
+      );
+
+  }
+
+
+
+  /* =====================================================
+     SELECT CALENDAR TIME
+  ===================================================== */
+
+  function selectTime(
+    button,
+    time
+  ) {
+
+    selectedTime =
+      time;
+
+
+    document
+      .querySelectorAll(
+        ".time-slot"
+      )
+      .forEach(
+        slot =>
+          slot
+            .classList
+            .remove(
+              "selected"
+            )
+      );
+
+
+    button
+      .classList
+      .add(
+        "selected"
+      );
+
+
+    document
+      .getElementById(
+        "selectedTimeDisplay"
+      )
+      .innerHTML =
+
+        `✅ Selected:
+        <strong>
+          ${time}
+        </strong>`;
+
+  }
+
+
+
+  /* =====================================================
+     CLOSE CALENDAR
+  ===================================================== */
+
+  function closeCalendar() {
+
+    document
+      .getElementById(
+        "calendarPopup"
+      )
+      .style.display =
+        "none";
+
+
+    document
+      .getElementById(
+        "matchPopup"
+      )
+      .style.display =
+        "flex";
+
+  }
+
+
+
+  /* =====================================================
+     CONFIRM SESSION
+  ===================================================== */
+
+  function confirmSelectedTime() {
+
+    if (!selectedTime) {
+
+      alert(
+        "Choose a time first 👀"
+      );
+
+      return;
+
+    }
+
+
+    const newSession = {
+
+      person:
+        matchedPerson.name,
+
+      learn:
+        selectedTheyTeach,
+
+      teach:
+        selectedYouTeach,
+
+      duration:
+        selectedSession,
+
+      time:
+        selectedTime
+
+    };
+
+
+    bookedSessions.push(
+      newSession
+    );
+
+
+    document
+      .getElementById(
+        "calendarPopup"
+      )
+      .style.display =
+        "none";
+
+
+    document
+      .getElementById(
+        "confirmationPopup"
+      )
+      .style.display =
+        "flex";
+
+
+    document
+      .getElementById(
+        "confirmationDetails"
+      )
+      .innerHTML = `
+
+        <strong>
+          You + ${matchedPerson.name}
+        </strong>
+
+        <br><br>
+
+        💛 You learn:
+
+        <strong>
+          ${selectedTheyTeach}
+        </strong>
+
+        <br>
+
+        💙 You teach:
+
+        <strong>
+          ${selectedYouTeach}
+        </strong>
+
+        <br><br>
+
+        📅
+
+        <strong>
+          ${selectedTime}
+        </strong>
+
+        <br>
+
+        ⏱
+        ${selectedSession}
+
+        <br>
+
+        📍
+        Campus / Online
+
+        <br>
+
+        💸
+        Price: €0
+
+      `;
+
+
+    launchBeers();
+
+  }
+
+
+
+  /* =====================================================
+     FLYING BEERS 🍺
+  ===================================================== */
+
+  function launchBeers() {
+
+    const app =
+      document.querySelector(
+        ".app"
+      );
+
+
+    for (
+      let i = 0;
+      i < 18;
+      i++
+    ) {
+
+      const beer =
+        document.createElement(
+          "div"
+        );
+
+
+      beer.className =
+        "flying-beer";
+
+
+      beer.innerText =
+        "🍺";
+
+
+      beer.style.left =
+        Math.random() * 90 +
+        "%";
+
+
+      beer.style.animationDelay =
+        Math.random() * 0.8 +
+        "s";
+
+
+      beer.style.fontSize =
+        (
+          30 +
+          Math.random() * 35
+        )
+        +
+        "px";
+
+
+      app.appendChild(
+        beer
+      );
+
+
+      setTimeout(
+
+        () => {
+
+          beer.remove();
+
+        },
+
+        4000
+
+      );
+
+    }
+
+  }
+
+
+
+  /* =====================================================
+     MY SESSIONS
+  ===================================================== */
+
+  function openMySessions() {
+
+    renderSessions();
+
+
+    document
+      .getElementById(
+        "sessionsPopup"
+      )
+      .style.display =
+        "flex";
+
+  }
+
+
+  function openMySessionsFromConfirmation() {
+
+    document
+      .getElementById(
+        "confirmationPopup"
+      )
+      .style.display =
+        "none";
+
+
+    openMySessions();
+
+  }
+
+
+  function closeMySessions() {
+
+    document
+      .getElementById(
+        "sessionsPopup"
+      )
+      .style.display =
+        "none";
+
+  }
+
+
+
+  function renderSessions() {
+
+    const container =
+      document.getElementById(
+        "sessionsList"
+      );
+
+
+    if (
+      bookedSessions.length === 0
+    ) {
+
+      container.innerHTML = `
+
+        <div class="session-empty">
+
+          <h3>
+            Nothing planned yet 👀
+          </h3>
+
+          <br>
+
+          <p>
+            Swipe someone and
+            schedule your first
+            SkillSwap.
+          </p>
+
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+
+    container.innerHTML =
+      bookedSessions
+
+        .map(
+
+          session => `
+
+            <div class="session-card">
+
+              <h3>
+                👤 ${session.person}
+              </h3>
+
+              💛 Learn:
+              <strong>
+                ${session.learn}
+              </strong>
+
+              <br>
+
+              💙 Teach:
+              <strong>
+                ${session.teach}
+              </strong>
+
+              <br><br>
+
+              📅
+              ${session.time}
+
+              <br>
+
+              ⏱
+              ${session.duration}
+
+            </div>
+
+          `
+
+        )
+
+        .join("");
+
+  }
+
+
+
+  /* =====================================================
+     CLOSE MATCH
+  ===================================================== */
+
+  function closeMatch() {
+
+    document
+      .getElementById(
+        "matchPopup"
+      )
+      .style.display =
+        "none";
+
+  }
+
+
+
+  /* =====================================================
+     FINISH CONFIRMATION
+  ===================================================== */
+
+  function finishSession() {
+
+    document
+      .getElementById(
+        "confirmationPopup"
+      )
+      .style.display =
+        "none";
+
+
+    matchedPerson =
+      null;
+
+  }
+
+
+
+  /* =====================================================
+     CARD ANIMATION
+  ===================================================== */
+
+  function animateCard(
+    direction
+  ) {
+
+    const card =
+      document.querySelector(
+        ".card"
+      );
+
+
+    if (!card) {
+
+      currentProfile++;
+
+      showProfile();
+
+      return;
+
+    }
+
+
+    if (
+      direction ===
+      "left"
+    ) {
+
+      card.style.transform =
+        "translateX(-450px) rotate(-20deg)";
+
+    }
+
+    else {
+
+      card.style.transform =
+        "translateX(450px) rotate(20deg)";
+
+    }
+
+
+    card.style.opacity =
+      "0";
+
+
+    setTimeout(
+
+      () => {
+
+        currentProfile++;
+
+        showProfile();
+
+      },
+
+      300
+
+    );
+
+  }
+
+
+
+  /* =====================================================
+     START APP
+  ===================================================== */
+
+  showMySkills();
+
+  showProfile();
+
+</script>
+
+</body>
+
+</html>
